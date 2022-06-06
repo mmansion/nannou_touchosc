@@ -1,0 +1,16 @@
+[package]
+name = "nannou_touchosc"
+authors = ["Mikhail Mansion <mikhail@transmission.studio>"]
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+nannou = "0.18.0"
+nannou_osc = "0.18.0"
+regex = "1.5.6"
+
+[[example]]
+name = "touchosc-client"
+path = "example/touchosc-client.rs"
