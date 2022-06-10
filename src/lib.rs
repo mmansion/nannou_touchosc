@@ -1,3 +1,29 @@
+// nannou_touchosc library
+// mikhail mansion
+// https://mikhailmansion.art
+
+// The MIT License (MIT)
+
+// Copyright (c) 2022 Mikhail Mansion.
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 use nannou::prelude::*;
 use nannou_osc as osc;
 use regex::escape;
@@ -31,6 +57,8 @@ pub struct TouchOscClient {
     touchosc_radials: HashMap<String, TouchOscRadial>,
     touchosc_radios: HashMap<String, TouchOscRadio>,
     touchosc_xys: HashMap<String, TouchOscXY>,
+
+    verbose: bool,
 }
 
 impl TouchOscClient {
@@ -46,10 +74,17 @@ impl TouchOscClient {
             touchosc_radials: HashMap::new(),
             touchosc_radios: HashMap::new(),
             touchosc_xys: HashMap::new(),
+            verbose: false,
         }
+    }
+    pub fn verbose(&mut self) {
+        self.verbose = true; //prints all received messages
     }
     pub fn update(&mut self) {
         for (packet, ip_addr) in self.osc_receiver.try_iter() {
+            if self.verbose {
+                println!("from: {}", ip_addr);
+            }
             for msg in packet.into_msgs() {
                 let args = msg.args.unwrap();
                 let mut found_key = false; //TODO: remove this
@@ -64,7 +99,7 @@ impl TouchOscClient {
                                             [osc::Type::Float(x)] => *x,
                                             _etc => button.value(),
                                         });
-                                        button.print(&msg.addr);
+                                        button.print(&msg.addr, self.verbose);
                                         found_key = true;
                                     }
                                     None => (),
@@ -77,7 +112,7 @@ impl TouchOscClient {
                                             [osc::Type::Float(x)] => *x,
                                             _etc => fader.value(),
                                         });
-                                        fader.print(&msg.addr);
+                                        fader.print(&msg.addr, self.verbose);
                                         found_key = true;
                                     }
                                     None => (),
@@ -90,7 +125,7 @@ impl TouchOscClient {
                                             [osc::Type::Float(x)] => *x,
                                             _etc => encoder.value(),
                                         });
-                                        encoder.print(&msg.addr);
+                                        encoder.print(&msg.addr, self.verbose);
                                         found_key = true;
                                     }
                                     None => (),
@@ -105,7 +140,7 @@ impl TouchOscClient {
                                             }
                                             _etc => radar.values(),
                                         });
-                                        radar.print(&msg.addr);
+                                        radar.print(&msg.addr, self.verbose);
                                         found_key = true;
                                     }
                                     None => (),
@@ -118,7 +153,7 @@ impl TouchOscClient {
                                             [osc::Type::Float(x)] => *x,
                                             _etc => radial.value(),
                                         });
-                                        radial.print(&msg.addr);
+                                        radial.print(&msg.addr, self.verbose);
                                         found_key = true;
                                     }
                                     None => (),
@@ -131,7 +166,7 @@ impl TouchOscClient {
                                             [osc::Type::Int(x)] => *x,
                                             _etc => radio.value(),
                                         });
-                                        radio.print(&msg.addr);
+                                        radio.print(&msg.addr, self.verbose);
                                         found_key = true;
                                     }
                                     None => (),
@@ -143,7 +178,7 @@ impl TouchOscClient {
                                         [osc::Type::Float(x), osc::Type::Float(y)] => pt2(*x, *y),
                                         _etc => xy.values(),
                                     });
-                                    xy.print(&msg.addr);
+                                    xy.print(&msg.addr, self.verbose);
                                     found_key = true;
                                 }
                                 None => (),
@@ -168,7 +203,7 @@ impl TouchOscClient {
                                             _etc => grid.value(&msg.addr),
                                         },
                                     );
-                                    grid.print(&msg.addr);
+                                    grid.print(&msg.addr, self.verbose);
                                     found_key = true;
                                 }
                                 None => (),
@@ -201,7 +236,6 @@ impl TouchOscClient {
     }
     pub fn add_grid(&mut self, addr: &str, size: usize, min: f32, max: f32, default: f32) {
         self.verify_free_addr(addr);
-        println!("{}", addr);
         self.lookup_table
             .insert((&addr).to_string(), TouchOscInputType::Grid);
         self.touchosc_grids.insert(
@@ -387,8 +421,10 @@ impl TouchOscButton {
             value,
         }
     }
-    pub fn print(&self, addr: &str) {
-        println!("{} {}", addr, self.state);
+    pub fn print(&self, addr: &str, is_verbose: bool) {
+        if is_verbose {
+            println!("{} {}", addr, self.state);
+        }
     }
     pub fn set_state(&mut self, value: f32) {
         if value > 0.0 {
@@ -420,8 +456,10 @@ impl TouchOscFader {
             value: default,
         }
     }
-    pub fn print(&self, addr: &str) {
-        println!("{} {}", addr, self.value);
+    pub fn print(&self, addr: &str, is_verbose: bool) {
+        if is_verbose {
+            println!("{} {}", addr, self.value);
+        }
     }
     pub fn set_min(&mut self, min: f32) {
         self.min = min;
@@ -457,9 +495,11 @@ impl TouchOscGrid {
             faders,
         }
     }
-    pub fn print(&self, addr: &str) {
-        if self.faders.contains_key(addr) {
-            println!("{} {}", addr, self.faders[addr].value());
+    pub fn print(&self, addr: &str, is_verbose: bool) {
+        if is_verbose {
+            if self.faders.contains_key(addr) {
+                println!("{} {}", addr, self.faders[addr].value());
+            }
         }
     }
     pub fn base_addr(&self) -> &str {
@@ -472,7 +512,10 @@ impl TouchOscGrid {
                 None => (),
             }
         } else {
-            println!("cannot value on 'out of bounds' grid element: {}", addr);
+            println!(
+                "cannot obtain value on 'out of bounds' grid element: {}",
+                addr
+            );
         }
     }
     pub fn value(&self, addr: &str) -> f32 {
@@ -494,8 +537,10 @@ impl TouchOscEncoder {
             value: default, //default
         }
     }
-    pub fn print(&self, addr: &str) {
-        println!("{} {}", addr, self.value);
+    pub fn print(&self, addr: &str, is_verbose: bool) {
+        if is_verbose {
+            println!("{} {}", addr, self.value);
+        }
     }
     pub fn set_min(&mut self, min: f32) {
         self.min = min;
@@ -535,8 +580,10 @@ impl TouchOscRadar {
             rot_max: rot_max,
         }
     }
-    pub fn print(&self, addr: &str) {
-        println!("{} {},{}", addr, self.values.x, self.values.y);
+    pub fn print(&self, addr: &str, is_verbose: bool) {
+        if is_verbose {
+            println!("{} {},{}", addr, self.values.x, self.values.y);
+        }
     }
     pub fn set_rad_min(&mut self, rad_min: f32) {
         self.rad_min = rad_min;
@@ -578,8 +625,10 @@ impl TouchOscRadial {
             value: default,
         }
     }
-    pub fn print(&self, addr: &str) {
-        println!("{} {}", addr, self.value);
+    pub fn print(&self, addr: &str, is_verbose: bool) {
+        if is_verbose {
+            println!("{} {}", addr, self.value);
+        }
     }
     pub fn set_min(&mut self, min: f32) {
         self.min = min;
@@ -610,8 +659,10 @@ impl TouchOscRadio {
             value: default,
         }
     }
-    pub fn print(&self, addr: &str) {
-        println!("{} {}", addr, self.value);
+    pub fn print(&self, addr: &str, is_verbose: bool) {
+        if is_verbose {
+            println!("{} {}", addr, self.value);
+        }
     }
     pub fn set_value(&mut self, value: i32) {
         self.value = value;
@@ -637,8 +688,10 @@ impl TouchOscXY {
             values: pt2(default, default), //xy
         }
     }
-    pub fn print(&self, addr: &str) {
-        println!("{} {},{}", addr, self.values.x, self.values.y);
+    pub fn print(&self, addr: &str, is_verbose: bool) {
+        if is_verbose {
+            println!("{} {},{}", addr, self.values.x, self.values.y);
+        }
     }
     pub fn set_min(&mut self, min: f32) {
         self.min = min;
