@@ -1,6 +1,6 @@
 # nannou_touchosc
 
-Nannou TouchOSC is a library for receiving OSC messages from TouchOSC controllers in Nannou.
+`nannou_touchosc`is a library for receiving OSC messages from TouchOSC controllers in Nannou.
 
 ## Overview
 
@@ -13,7 +13,7 @@ It provides an editor for quickly designing and publishing custom  interfaces th
 
 ### Dependencies
 
-This library uses `nannou`, `nannou_OSC` and `regex` crates. The library was tested using TouchOSC `v1.1.3`. nannou_touchosc is *not* intended for `mk1`.
+This library uses `nannou`, `nannou_OSC` and `regex` crates. The library was tested using TouchOSC `v1.1.3`. Note that `nannou_touchosc` is *not* intended for `mk1`.
 
 *this `Cargo.toml`*
 ```
@@ -34,7 +34,6 @@ regex = "1.5.6"
 
 members = [
     "your_nannou_sketchbook"
-    "your_other_stuff",
     "nannou_touchosc",
     "...etc"
 ]
@@ -42,7 +41,7 @@ members = [
 
 ### 2. Import the TouchOSC Library
 
-*at the beginning of your sketch*
+*included at the top of the sketch*
 
 ```
 use nannou_touchosc::TouchOscClient;
