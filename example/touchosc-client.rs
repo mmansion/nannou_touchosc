@@ -39,7 +39,7 @@ fn model(app: &App) -> Model {
     touchosc.add_xy("/scale", 0.1, 3.0, 1.0);
     touchosc.add_fader("/stroke_width", 1.0, 10.0, 2.0);
     touchosc.add_fader("/vertices", 3.0, 8.0, 3.0);
-    touchosc.add_radar("/scale_rotate", (0.1, 1.0, 1.0), (0.0, PI * 2.0, PI / 4.0));
+    touchosc.add_radar("/scale_rotate", (0.1, 10.0, 1.0), (0.0, PI * 2.0, PI / 4.0));
 
     Model { touchosc }
 }

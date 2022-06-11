@@ -2,12 +2,14 @@
 
 `nannou_touchosc`is a library for receiving OSC messages from TouchOSC controllers in Nannou.
 
+<img width="640" alt="readme-git-flow" src="example/images/nannou_touchosc.gif">
+
 ## Overview
 
-**[TouchOSC](https://hexler.net/touchosc)** is a cross-platform controller used extensively by artists.
+**<a href="https://hexler.net/touchosc" target="_blank">TouchOSC</a>** is a cross-platform controller used extensively by artists.
 It provides an editor for quickly designing and publishing custom  interfaces that can control other devices and applications using OSC. TouchOSC is available for Windows, MacOS, Linux, iOS, Android and some other unique environments. 
 
-**[Nannou](https://nannou.cc/)** is a creative coding framework written in [Rust](https://www.rust-lang.org/). Nannou aims to make it easy for artists to express themselves with simple, fast, reliable code. 
+**<a href="https://nannou.cc/" target="_blank">Nannou</a>** is a creative coding framework written in [Rust](https://www.rust-lang.org/). Nannou aims to make it easy for artists to express themselves with simple, fast, reliable code. 
 
 **[nannou_touchosc](#)** is a Nannou library that makes it easy for artists and designers to quickly create custom interfaces and send values via OSC. 
 
