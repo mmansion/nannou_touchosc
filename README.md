@@ -15,7 +15,7 @@ It provides an editor for quickly designing and publishing custom  interfaces th
 
 This library uses `nannou`, `nannou_OSC` and `regex` crates. The library was tested using TouchOSC `v1.1.3`. nannou_touchosc is *not* intended for `mk1`.
 
-*...inside `Cargo.toml` of this library:*
+*this `Cargo.toml`*
 ```
 [dependencies]
 nannou = "0.18.0"
@@ -27,22 +27,22 @@ regex = "1.5.6"
 
 ### 1. Add `nannou_touchosc` to your Cargo Workspace
 
-*typically inside `Cargo.toml` of your workspace directory:*
+*inside `Cargo.toml` of your workspace directory:*
 
 ```
 [workspace]
 
 members = [
-    "my_nannou_sketchbook"
+    "your_nannou_sketchbook"
+    "your_other_stuff",
     "nannou_touchosc",
-    "other_libraries",
-    "etc"
+    "...etc"
 ]
 ```
 
 ### 2. Import the TouchOSC Library
 
-*inside your Nannou sketch file, e.g. `my-sketch.rs`:*
+*at the beginning of your sketch*
 
 ```
 use nannou_touchosc::TouchOscClient;
@@ -50,7 +50,7 @@ use nannou_touchosc::TouchOscClient;
 
 ### 3. Create a New TouchOSC Client
 
-*indicate which OSC port to listen on*
+*provide which OSC port to listen on*
 
 ```
 let mut touchosc = TouchOscClient::new(6555);
@@ -58,18 +58,21 @@ let mut touchosc = TouchOscClient::new(6555);
 
 ### 4. Add TouchOSC Inputs
 
+*provide a unique address, as well as min, max and default values*
 ```
-touchosc.add_fader("/my-fader", 0.0, 1.0, 0.5); //min, max, default values
+touchosc.add_fader("/my-fader", 0.0, 1.0, 0.5);
 ```
 
 ### 5. Update TouchOSC Input Values
 
+*check for new OSCmessages and update the client*
 ```
 touchosc.update();
 ```
 
 ### 6. Read TouchOSC Input Values
 
+*read values using the previously assigned address*
 ```
 let fader_value = touchosc.fader("/my-fader");
 
