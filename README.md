@@ -2,7 +2,7 @@
 
 `nannou_touchosc`is a library for receiving OSC messages from TouchOSC controllers in Nannou.
 
-<img width="640" alt="readme-git-flow" src="example/images/nannou_touchosc.gif">
+<img width="640" alt="nannou_touchosc animation" src="example/images/nannou_touchosc.gif">
 
 ## Overview
 
@@ -80,6 +80,20 @@ let fader_value = touchosc.fader("/my-fader");
 println!("My fader value = {}", fader_value);
 ```
 
+# Example App
+
+There is an example file that demonstrates all the different TouchOSC input types. See `example/touchosc-client.rs`. 
+
+To run the example file:
+
+```
+cargo run --example touchosc-client
+```
+
+A TouchOSC binary is also included in the example folder. This file can be opened by a licensed TouchOSC application. The example OSC port is `6555`.
+
+<img width="640" alt="touchosc controller" src="example/images/touchosc_controller.png">
+
 # Documentation
 
-`TODO`
+`COMING SOON`
