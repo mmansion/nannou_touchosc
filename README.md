@@ -27,7 +27,7 @@ regex = "1.5.6"
 
 ### 1. Add `nannou_touchosc` to your Cargo Workspace
 
-*...typically inside `Cargo.toml` of your workspace directory:*
+*typically inside `Cargo.toml` of your workspace directory:*
 
 ```
 [workspace]
@@ -40,31 +40,35 @@ members = [
 ]
 ```
 
-### 2. Import the Library
+### 2. Import the TouchOSC Library
 
-*...inside your Nannou sketch file, e.g. `my-sketch.rs`:*
+*inside your Nannou sketch file, e.g. `my-sketch.rs`:*
 
-### 3. Instantiate the Client
+```
+use nannou_touchosc::TouchOscClient;
+```
 
-*...indicate which OSC port to listen on*
+### 3. Create a New TouchOSC Client
+
+*indicate which OSC port to listen on*
 
 ```
 let mut touchosc = TouchOscClient::new(6555);
 ```
 
-### 4. Add Inputs
+### 4. Add TouchOSC Inputs
 
 ```
 touchosc.add_fader("/my-fader", 0.0, 1.0, 0.5); //min, max, default values
 ```
 
-### 5. Check for OSC messages
+### 5. Update TouchOSC Input Values
 
 ```
 touchosc.update();
 ```
 
-### 6. Read the Values
+### 6. Read TouchOSC Input Values
 
 ```
 let fader_value = touchosc.fader("/my-fader");
